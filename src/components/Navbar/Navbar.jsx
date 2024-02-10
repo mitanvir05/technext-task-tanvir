@@ -1,9 +1,9 @@
-import React from 'react';
-
 const Navbar = () => {
     return (
         <div>
-            <h1>Navbar</h1>
+            <div className="navbar bg-neutral text-neutral-content">
+                <button className="btn btn-ghost text-xl">Technext Ltd</button>
+            </div>
         </div>
     );
 };
