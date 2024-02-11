@@ -6,7 +6,7 @@ import Footer from "../Footer/Footer"
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("name"); 
+  const [sortBy, setSortBy] = useState("name");
 
   useEffect(() => {
     fetchUsers();
@@ -76,26 +76,30 @@ const UserList = () => {
             className="bg-white rounded-lg shadow-md p-4 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
           >
             <div className="text-center">
-              <img
-                src={user.image}
-                alt={user.firstName}
-                className="w-24 h-24 rounded-full mx-auto mb-4"
-              />
-              <p className="font-bold text-lg text-blue-500">
-                {user.firstName} {user.lastName}
-              </p>
-              <Link to={`/user/${user.id}`}>
-                <p className="text-gray-600 font-bold text-lg">
-                  {user.username}
-                </p>
-              </Link>
-              <p className="text-gray-600 text-sm">{user.email}</p>
-              <div className="mt-2 text-sm">
-                <p className="mb-1">
-                  <strong className="text-gray-800">Address:</strong>{" "}
-                  {user.address?.address}, {user.address?.suite},{" "}
-                  {user.address?.city}
-                </p>
+              <div className="relative">
+                <img
+                  src={user.image}
+                  alt={user.firstName}
+                  className="w-24 h-24 rounded-full mx-auto mb-4"
+                />
+                <Link to={`/user/${user.id}`}>
+                  <div className="absolute top-0 right-0 p-4 text-indigo-800 font-bold text-lg">
+                    <p><strong>User name : {""}</strong>{user.username}</p>
+                  </div>
+                </Link>
+              </div>
+              <div className="text-gray-600 text-sm mt-1">
+                <strong>First Name :</strong>{" "}{user.firstName} <br /> <strong>Last Name:</strong>{" "}{user.lastName}
+              </div>
+              <p className="text-gray-600 text-sm mt-1"> <strong>Email:</strong>{" "}{user.email}</p>
+              <div className="mt-1 text-sm">
+                <div className="text-gray-800">
+                  <strong className="text-gray-800 text-lg">Address :{" "}</strong>
+                  <p className="mb-1">
+                    <strong>Street:</strong>{" "}{user.address?.address}, <strong>Suit:</strong>{" "}{user?.address?.suite ? user?.address?.suite : 'n/a'},<strong>City:</strong>{" "}
+                    {" "}{user.address?.city}
+                  </p>
+                </div>
                 <p className="mb-1">
                   <strong className="text-gray-800">Company:</strong>{" "}
                   {user.company?.name}

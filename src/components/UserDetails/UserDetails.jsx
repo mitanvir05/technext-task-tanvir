@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { IoArrowBack } from "react-icons/io5";
+import { motion } from "framer-motion";
 import Navbar from "../Navbar/Navbar";
 
 const UserDetails = () => {
@@ -33,24 +34,43 @@ const UserDetails = () => {
           </button>
         </Link>
       </div>
-      <img
-        src={user.image}
-        alt={user.firstName}
-        className="w-20 h-20 rounded-full mx-auto mb-4"
-      />
-      <div className="text-center">
-        <p className="font-bold">
-          {user.firstName} {user.lastName}
-        </p>
-        <p className="text-gray-600">{user.email}</p>
-        <p className="mt-2">
-          <strong>Address:</strong> {user.address.address}, {user.address.suite}
-          , {user.address.city}
-        </p>
-        <p className="mt-2">
-          <strong>Company:</strong> {user.company.name}
-        </p>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src={user.image}
+          alt={user.firstName}
+          className="w-20 h-20 rounded-full mx-auto mb-4"
+        />
+        <div className="text-center">
+          <strong>First Name :</strong>{" "}{user.firstName} <br /> <strong>Last Name:</strong>{" "}{user.lastName}
+          <p className="text-gray-600 text-sm mt-1"> <strong>Email:</strong>{" "}{user.email}</p>
+          <div className="mt-2">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg"
+            >
+              <strong className="text-gray-800 text-lg">Address :{" "}</strong>
+            <p className="mb-1">
+              <strong>Street:</strong>{" "}{user.address?.address}, <strong>Suit:</strong>{" "}{user?.address?.suite ? user?.address?.suite : 'n/a'},<strong>City:</strong>{" "}
+              {" "}{user.address?.city}
+            </p>
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-lg"
+            >
+              <strong>Company:</strong> {user.company.name}
+            </motion.p>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
