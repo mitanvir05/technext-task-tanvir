@@ -1,12 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "../Navbar/Navbar"
+import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer"
+import Swal from "sweetalert2";
+
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    suite: "",
+    city: "",
+    companyName: "",
+    image: null,
+  });
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -28,6 +41,47 @@ const UserList = () => {
   const handleSortBy = (e) => {
     setSortBy(e.target.value);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      id: Math.floor(Math.random() * 1000) + 1,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      address: { address: formData.address },
+      suite: { address: formData.suite },
+      city: { address: formData.city },
+      company: { name: formData.companyName },
+      image: formData.image ? URL.createObjectURL(formData.image) : null,
+    };
+
+    setUsers([...users, newUser]);
+
+    Swal.fire("Success", "User added successfully", "success");
+
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      suite: "",
+      city: "",
+      companyName: "",
+      image: null,
+    });
+    setShowForm(false);
+  };
+
+  const handleChange = (e) => {
+    if (e.target.name === "image") {
+      setFormData({ ...formData, image: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
+  };
+
   const sortedUsers = users.slice().sort((a, b) => {
     if (sortBy === "name") {
       return (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName);
@@ -47,7 +101,7 @@ const UserList = () => {
 
   return (
     <div>
-      <Navbar> </Navbar>
+      <Navbar></Navbar>
       <div className="m-5">
         <div className="flex flex-wrap items-center justify-between mb-4">
           <input
@@ -67,7 +121,164 @@ const UserList = () => {
             <option value="email">Sort by email</option>
             <option value="company">Sort by Company name</option>
           </select>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            {showForm ? "Close Form" : "Add User"}
+          </button>
         </div>
+        {showForm && (
+          <form
+            className="bg-white shadow-md rounded md:w-2/4 lg:w-1/4 mx-auto px-8 pt-6 pb-8 mb-4"
+            onSubmit={handleSubmit}
+          >
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="image"
+              >
+                Avatar
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="image"
+                type="file"
+                name="image"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="firstName"
+              >
+                First Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="firstName"
+                type="text"
+                placeholder="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="lastName"
+              >
+                Last Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="lastName"
+                type="text"
+                placeholder="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <strong className="text-lg mb-4">Address:</strong>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="address"
+              >
+                Street
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="address"
+                type="text"
+                placeholder="Street"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="suite"
+              >
+                Suite
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="suite"
+                type="text"
+                placeholder="Suite"
+                name="suite"
+                value={formData.suite}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="city"
+              >
+                City
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="city"
+                type="text"
+                placeholder="City"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="companyName"
+              >
+                Company Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="companyName"
+                type="text"
+                placeholder="Company Name"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Add User
+              </button>
+            </div>
+          </form>
+        )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5 mx-5">
         {filteredUsers.map((user) => (
